@@ -59,7 +59,6 @@ class BurgerBuilder extends Component {
     }
 
     checkoutHandler = () => {
-        console.log('checkoutHandler');
         this.setState({ purchasing: true });
     }
 
