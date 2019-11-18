@@ -1,42 +1,50 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Modal from '../../components/UI/Modal/Modal';
 import Aux from '../Auxiliary/Auxiliary';
 
-const withErrorHandler = (WrapedComponent, axios) =>{
-    
+const withErrorHandler = (WrapedComponent, axios) => {
+
     return class extends Component {
 
-        constructor(props){
+        constructor(props) {
             super(props);
             console.log('constructor');
-            axios.interceptors.request.use(req => {
-                this.setState({error: null});
-            return req;});
-            axios.interceptors.response.use(resp =>resp, error => this.setState({error: error}));
+            this.reqInterceptor = axios.interceptors.request.use(req => {
+                this.setState({ error: null });
+                return req;
+            });
+            this.respInterceptor = axios.interceptors.response.use(resp => resp, error => this.setState({ error: error }));
         }
 
-        componentDidMount (){
+        componentWillUnmount() {
+            console.log(this.reqInterceptor);
+            console.log(this.respInterceptor);
+            axios.interceptors.request.eject(this.reqInterceptor);
+            axios.interceptors.response.eject(this.respInterceptor);
+        }
+
+        componentDidMount() {
             console.log('[withErrorHandler].componentDidMount')
         }
 
-        state={
+        state = {
             error: null
         };
 
-        errorConfirmedHandler = () =>{
+        errorConfirmedHandler = () => {
             console.log('errorConfirmedHandler');
-            this.setState({error: null});
+            this.setState({ error: null });
         }
 
-        render(){
+        render() {
 
-            return(
+            return (
                 <Aux>
                     <Modal show={this.state.error} closed={this.errorConfirmedHandler}>
-                        <p style={{textAlign: 'center'}}>{this.state.error ? this.state.error.message : null}</p>
+                        <p style={{ textAlign: 'center' }}>{this.state.error ? this.state.error.message : null}</p>
                     </Modal>
                     <WrapedComponent {...this.props} />
-                </Aux> 
+                </Aux>
             );
         }
     }
