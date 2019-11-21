@@ -44,11 +44,11 @@ class ContactData extends Component {
                 console.log(response);
                 this.setState({loading: false});
                 this.props.history.push('/');
-                })
+            })
             .catch(error => {
                 console.log(error);
                 this.setState({loading: false});
-                });
+        });
 
     }
 
