@@ -19,20 +19,20 @@ class App extends Component {
   // }
 
   render() {
-    return (
-      <div>
-        <Layout>
-          {/* {this.state.show ? <BurgerBuilder /> : null} */}
-          {/* <BurgerBuilder /> */}
-          {/* <Checkout /> */}
-          <Switch>
-            <Route path='/orders' component={Orders} />
-            <Route path='/checkout' component={Checkout} />
-            <Route path='/' component={BurgerBuilder} />
-          </Switch>
-        </Layout>
-      </div>
-    );
+        return (
+        <div>
+            <Layout>
+            {/* {this.state.show ? <BurgerBuilder /> : null} */}
+            {/* <BurgerBuilder /> */}
+            {/* <Checkout /> */}
+            <Switch>
+                <Route path='/orders' component={Orders} />
+                <Route path='/checkout' component={Checkout} />
+                <Route path='/' component={BurgerBuilder} />
+            </Switch>
+            </Layout>
+        </div>
+        );
   }
 }
 
