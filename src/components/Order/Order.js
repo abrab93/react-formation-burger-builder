@@ -1,9 +1,10 @@
 import React from 'react';
+import classes from './Order.css';
 
 const order = () => (
-    <div>
-        <P>Ingredients: Salad(1)</P>
-        <P>Price: <strong>USD 5.54</strong></P>
+    <div className={classes.Order}>
+        <p>Ingredients: Salad(1)</p>
+        <p>Price: <strong>USD 5.54</strong></p>
     </div>
 );
 
