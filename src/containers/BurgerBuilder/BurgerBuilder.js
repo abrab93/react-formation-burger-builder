@@ -8,25 +8,19 @@ import axios from '../../axios-order';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import { connect } from 'react-redux';
-import * as actionTypes from '../../store/actions';
+//import * as actionTypes from '../../store/actions/actionTypes';
+import * as burgerBuilderActions from '../../store/actions/index';
 
 class BurgerBuilder extends Component {
 
     state = {
         purchasing: false,
-        loading: false,
         error: false
     }
 
     componentDidMount() {
-        /*console.log('[BurgerBuilder].componentDidMount')
-        console.log(this.props);
-        axios.get("/ingredients.json")
-            .then(response => {
-                this.setState({ ingredients: response.data });
-                console.log(response.data);
-            })
-            .catch(error => { this.setState({ error: true }) });*/
+
+        this.props.onFetchIngredient();
     }
 
     updatePurchaseState = (ingredients) => {
@@ -93,7 +87,7 @@ class BurgerBuilder extends Component {
 
         let orderSummary = null;
 
-        let burger = this.state.error ? <p>Ingredients can't be loaded !!</p> : <Spinner />;
+        let burger = this.error ? <p>Ingredients can't be loaded !!</p> : <Spinner />;
 
         if (this.props.ingds) {
             burger = (
@@ -114,10 +108,6 @@ class BurgerBuilder extends Component {
                 ingredients={this.props.ingds}
                 purchaseCancelled={this.purchaseCancelHandler}
                 purshaseContinued={this.purchaseContinueHandler} />);
-
-            if (this.state.loading) {
-                orderSummary = <Spinner />;
-            }
         }
 
         return (
@@ -134,14 +124,16 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
     return {
         ingds: state.ingredients,
-        price: state.totalPrice
+        price: state.totalPrice,
+        error: state.error
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddIngredient: (ingredientName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingredientName}),
-        onRemoveIngredient: (ingredientName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingredientName})
+        onAddIngredient: (ingredientName) => dispatch(burgerBuilderActions.addIngredient(ingredientName)),
+        onRemoveIngredient: (ingredientName) => dispatch(burgerBuilderActions.removeIngredient(ingredientName)),
+        onFetchIngredient: () => dispatch(burgerBuilderActions.fetchIngredients())
     };
 };
 
