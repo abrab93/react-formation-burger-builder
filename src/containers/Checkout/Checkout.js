@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckOutSummary';
 import ContactData from '../Checkout/ContactData/ContactData';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 class Checkout extends Component {
@@ -30,18 +30,24 @@ class Checkout extends Component {
     }
 
     render() {
-        return (
-            <div>
-                <CheckoutSummary
-                    ingredients={this.props.ingds}
-                    checkoutCancelled={this.checkoutCancelledHandler}
-                    checkoutContinued={this.checkoutContinuedHandler} />
-                {/*<Route 
-                    path={this.props.match.path + '/contact-data'} 
-                    render={(props) => <ContactData 
-                                                ingredients={this.props.ingds} 
-                                                totalPrice={this.props.price}
-                    {...props} />}/>*/}
+
+        let summary = <Redirect to='/' />;
+
+        if(this.props.ingds){
+            const purchasedRedirect = this.props.purchased ? <Redirect to='/' /> : null;
+            summary = (
+                 <div>
+                     {purchasedRedirect}
+                    <CheckoutSummary
+                        ingredients={this.props.ingds}
+                        checkoutCancelled={this.checkoutCancelledHandler}
+                        checkoutContinued={this.checkoutContinuedHandler} />
+                        {/*<Route 
+                        path={this.props.match.path + '/contact-data'} 
+                        render={(props) => <ContactData 
+                                                    ingredients={this.props.ingds} 
+                                                    totalPrice={this.props.price}
+                        {...props} />}/>*/}
 
                     <Route 
                         path={this.props.match.path + '/contact-data'} 
@@ -49,14 +55,18 @@ class Checkout extends Component {
                     />
 
             </div>
-        )
+            );
+        }
+
+        return summary;
     };
 }
 
 const mapStateToProps = state => {
     return {
-        ingds: state.ingredients,
-        price: state.totalPrice
+        ingds: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        purchased: state.order.purchased
     };
 };
 
