@@ -5,6 +5,9 @@ import Aux from '../Auxiliary/Auxiliary';
 const withErrorHandler = (WrapedComponent, axios) => {
 
     return class extends Component {
+        state = {
+            error: null
+        };
 
         constructor(props) {
             super(props);
@@ -24,12 +27,10 @@ const withErrorHandler = (WrapedComponent, axios) => {
         }
 
         componentDidMount() {
+           // _isMounted = true;
             console.log('[withErrorHandler].componentDidMount')
         }
 
-        state = {
-            error: null
-        };
 
         errorConfirmedHandler = () => {
             console.log('errorConfirmedHandler');
@@ -40,7 +41,9 @@ const withErrorHandler = (WrapedComponent, axios) => {
 
             return (
                 <Aux>
-                    <Modal show={this.state.error} closed={this.errorConfirmedHandler}>
+                    <Modal 
+                        show={this.state.error} 
+                        closed={this.errorConfirmedHandler}>
                         <p style={{ textAlign: 'center' }}>{this.state.error ? this.state.error.message : null}</p>
                     </Modal>
                     <WrapedComponent {...this.props} />
