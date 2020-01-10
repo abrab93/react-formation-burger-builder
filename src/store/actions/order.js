@@ -1,7 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 import axios from '../../axios-order';
 
-export const purchaseBurgerSuccess = (id, orderData) =>{
+export const purchaseBurgerSuccess = (id, orderData) => {
     return {
         type: actionTypes.PURCHASE_BURGER_SUCCESS,
         orderId: id,
@@ -9,8 +9,8 @@ export const purchaseBurgerSuccess = (id, orderData) =>{
     }
 }
 
-export const purchaseBurgerFail = (error) =>{
-     return {
+export const purchaseBurgerFail = (error) => {
+    return {
         type: actionTypes.PURCHASE_BURGER_FAIL,
         error: error
     };
@@ -22,10 +22,10 @@ export const purchaseBurderStart = () => {
     };
 };
 
-export const purchaseBurger = (orderData, token) =>{
+export const purchaseBurger = (orderData, token) => {
     return dispatch => {
         dispatch(purchaseBurderStart());
-        axios.post('/orders.json?auth='+token, orderData)
+        axios.post('/orders.json?auth=' + token, orderData)
             .then(response => {
                 dispatch(purchaseBurgerSuccess(response.data.name, orderData));
             })
@@ -36,30 +36,31 @@ export const purchaseBurger = (orderData, token) =>{
     };
 };
 
-export const purchaseInit = () =>{
+export const purchaseInit = () => {
     return {
         type: actionTypes.PURSHASE_INIT
     };
 };
 
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
-        axios.get('/orders.json?auth='+token)
-            .then(response =>{
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo="' + userId + '"';
+        axios.get('/orders.json' + queryParams)
+            .then(response => {
                 console.log(response.data);
                 let fetchedOrders = [];
-                for (let key in response.data){
+                for (let key in response.data) {
                     fetchedOrders.push({
-                        id: key, 
+                        id: key,
                         ...response.data[key]
                     });
                 }
-                dispatch(fetchOrdersSucced(fetchedOrders));
+                dispatch(fetchOrdersSucced(fetchedOrders.filter(order => order.userId === userId)));
             })
-            .catch(error =>{
+            .catch(error => {
                 dispatch(fetchOrdersFailed(error));
-        })    
+            })
     };
 };
 

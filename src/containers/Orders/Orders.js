@@ -1,14 +1,14 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Order from '../../components/Order/Order';
 import axios from '../../axios-order';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withError from '../../hoc/withErrorHandler/withErrorHandler'
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import * as orderActions from '../../store/actions/index';
 
 class Orders extends Component {
 
-    componentDidMount(){
+    componentDidMount() {
         /*axios.get('/orders.json')
         .then(response =>{
             console.log(response.data);
@@ -25,45 +25,46 @@ class Orders extends Component {
             console.log(error);
             this.setState({loading: false});
         })*/
-        this.props.onFetchOrders(this.props.token);
+        this.props.onFetchOrders(this.props.token, this.props.userId);
     }
 
-    render(){
+    render() {
 
         let orders = <Spinner />;
 
-        if (!this.props.loading){
+        if (!this.props.loading) {
             orders = (
                 <div>
-                    {this.props.orders.map(order =>{
+                    {this.props.orders.map(order => {
                         return <Order
-                                    key={order.id}
-                                    ingredients={order.ingredients}
-                                    price={order.price} />
+                            key={order.id}
+                            ingredients={order.ingredients}
+                            price={order.price} />
                     })}
                 </div>
             );
         }
 
-        return(
+        return (
             <div>
-                {orders}  
+                {orders}
             </div>
         );
     }
 }
 
-const mapStatToProps = state =>{
+const mapStatToProps = state => {
     return {
         orders: state.order.orders,
         loading: state.order.loading,
-        token: state.auth.token
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onFetchOrders: (token) => dispatch(orderActions.fetchOrders(token))
+        onFetchOrders: (token, userId) => dispatch(orderActions.fetchOrders(token, userId))
     }
 }
 
