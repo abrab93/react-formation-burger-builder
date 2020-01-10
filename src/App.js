@@ -7,6 +7,8 @@ import Orders from './containers/Orders/Orders';
 import Authentication from './containers/Auth/Auth';
 import { Route, Switch } from 'react-router-dom';
 import Logout from './containers/Auth/Logout/Logout';
+import * as actions from './store/actions/index';
+import { connect } from 'react-redux';
 
 class App extends Component {
 
@@ -20,24 +22,34 @@ class App extends Component {
   //   },5000)
   // }
 
+  componentDidMount() {
+    this.props.onTryCheckAuthState();
+  }
+
   render() {
-        return (
-        <div>
-            <Layout>
-            {/* {this.state.show ? <BurgerBuilder /> : null} */}
-            {/* <BurgerBuilder /> */}
-            {/* <Checkout /> */}
-            <Switch>
-                <Route path='/orders' component={Orders} />
-                <Route path='/checkout' component={Checkout} />
-                <Route path='/auth' component={Authentication} />
-                <Route path='/logout' component={Logout} />
-                <Route path='/' exact component={BurgerBuilder} />
-            </Switch>
-            </Layout>
-        </div>
-        );
+    return (
+      <div>
+        <Layout>
+          {/* {this.state.show ? <BurgerBuilder /> : null} */}
+          {/* <BurgerBuilder /> */}
+          {/* <Checkout /> */}
+          <Switch>
+            <Route path='/orders' component={Orders} />
+            <Route path='/checkout' component={Checkout} />
+            <Route path='/auth' component={Authentication} />
+            <Route path='/logout' component={Logout} />
+            <Route path='/' exact component={BurgerBuilder} />
+          </Switch>
+        </Layout>
+      </div>
+    );
   }
 }
 
-export default App;
+const mapDispatchToProps = dispatch => {
+  return {
+    onTryCheckAuthState: () => dispatch(actions.authCheckState())
+  }
+}
+
+export default connect(null, mapDispatchToProps)(App);
