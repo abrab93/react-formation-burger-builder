@@ -7,7 +7,7 @@ import Input from '../../../components/UI/Input/Input';
 import { connect } from 'react-redux';
 import withError from '../../../hoc/withErrorHandler/withErrorHandler'
 import * as orderActions from '../../../store/actions/index';
-import { updateObject } from '../../../shared/utility';
+import { updateObject, checkValidity } from '../../../shared/utility';
 
 class ContactData extends Component {
 
@@ -127,46 +127,18 @@ class ContactData extends Component {
 
     }
 
-    checkValidity(rules, value) {
-        let isValid = true;
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid;
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid;
-        }
-
-        return isValid;
-    }
-
     inputChangedHandler = (event, elementIdentifier) => {
     
         const updatedFormdElement = updateObject(this.state.orderForm[elementIdentifier], {
             value: event.target.value,
-            valid: this.checkValidity(this.state.orderForm[elementIdentifier].validation, event.target.value),
+            valid: checkValidity(this.state.orderForm[elementIdentifier].validation, event.target.value),
             touched: true
         });
 
         const updatedOrderForm = updateObject(this.state.orderForm, {
             [elementIdentifier]: updatedFormdElement
         });
-        
+
         let formIsValid = true;
         for (let elementIdentifier in updatedOrderForm) {
             formIsValid = updatedOrderForm[elementIdentifier].valid && formIsValid;
